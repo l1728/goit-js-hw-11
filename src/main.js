@@ -5,12 +5,19 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 import { fetchImages } from "./js/pixabay-api";
-import {clearGallery, renderImages } from "./js/render-functions"
+import { clearGallery, renderImages } from "./js/render-functions"
+
+
 
 // Отримуємо посилання на форму та список галереї за їх ідентифікаторами
 const searchForm = document.getElementById("search-form");
 // Додаємо обробник події "submit" до форми
 searchForm.addEventListener("submit", onFormSubmit);
+
+// document.addEventListener("DOMContentLoaded", function() {
+//   // Приховуємо індикатор завантаження при завантаженні сторінки
+//   hideLoader();
+// });
 
 function onFormSubmit(event) {
   event.preventDefault();
@@ -19,26 +26,29 @@ function onFormSubmit(event) {
   // Видаляємо зайві пробіли з початку та кінця рядка
   const query = searchInput.value.trim();
   // Перевіряємо, чи не є поле пошуку порожнім
+   
   if (query !== "") {
     // Показуємо індикатор завантаження
-    showLoader();
+      showLoader();
     // Виконуємо HTTP-запит за допомогою функції fetchImages
     fetchImages(query)
       .then(images => {
-        // Приховуємо індикатор завантаження
-        hideLoader();
         //Очищуємо галерею
         clearGallery();
         //Очищуємо поле інпуту
         searchInput.value = "";
+        
         if (images.length === 0) {
           // Виводимо повідомлення про відсутність зображень
           iziToast.info({
             title: "Information",
             message: "Sorry, there are no images matching your search query. Please try again!",
-            position: "topCenter",
+            position: "topRight",
+            backgroundColor: "red",
+            maxWidth: "500px"
           });
         } else {
+         
           renderImages(images);
         };
       })
@@ -52,6 +62,8 @@ function onFormSubmit(event) {
       .finally(() => {
         // Очищаємо значення пошукового поля незалежно від результату
         searchInput.value = "";
+        // Приховуємо індикатор завантаження
+        hideLoader();
       });
   }
 };

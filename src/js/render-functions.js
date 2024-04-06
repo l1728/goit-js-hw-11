@@ -15,19 +15,19 @@ function galleryItemsMarkup(arr) {
     return arr
         .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
   <li class="gallery-item">
-    <a class="gallery-link" href="${largeImageURL}">
+     <a class="gallery-link" href="${largeImageURL}">
       <img class="gallery-image"
       src="${webformatURL}"
       alt="${tags}"
+      loading="lazy"
       />
-    </a>
-    <div class="image-details">
-    <p>Tags: ${tags}</p>
-    <p>Likes: ${likes}</p>
-    <p>Views: ${views}</p>
-    <p>Comments: ${comments}</p>
-    <p>Downloads: ${downloads}</p>
-  </div>
+     </a>
+     <ul class="image-details">
+       <li class="activities"><span class="details">Likes</span> ${likes}</li>
+       <li class="activities"><span class="details">Views</span> ${views}</li>
+       <li class="activities"><span class="details">Comments</span> ${comments}</li>
+       <li class="activities"><span class="details">Downloads</span> ${downloads}</li>
+     </ul>
   </li>`)
     .join('');
 };
