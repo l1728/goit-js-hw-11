@@ -10,7 +10,16 @@ export function clearGallery() {
 export function renderImages(images) {
     const gallery = document.querySelector(".gallery");
  // Генеруємо розмітку для кожного елемента галереї
-gallery.insertAdjacentHTML("beforeend", galleryItemsMarkup(images));
+    gallery.insertAdjacentHTML("beforeend", galleryItemsMarkup(images));
+
+    // Підключаємо бібліотеку і вказуємо затримку підпису зображення з атрибуту alt
+const lightbox = new SimpleLightbox('.gallery a', { captionDelay: 250,
+    captionsData: 'alt', // Використовуємо атрибут alt як джерело підписів
+});
+
+      // Оновлюємо галерею після додавання нових елементів
+    lightbox.refresh();
+    
 function galleryItemsMarkup(arr) {
     return arr
         .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
@@ -32,10 +41,7 @@ function galleryItemsMarkup(arr) {
     .join('');
 };
 
-// Підключаємо бібліотеку і вказуємо затримку підпису зображення з атрибуту alt
-const lightbox = new SimpleLightbox('.gallery a', { captionDelay: 250,
-    captionsData: 'alt', // Використовуємо атрибут alt як джерело підписів
-});
+
 };
 
 

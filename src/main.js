@@ -14,10 +14,10 @@ const searchForm = document.getElementById("search-form");
 // Додаємо обробник події "submit" до форми
 searchForm.addEventListener("submit", onFormSubmit);
 
-// document.addEventListener("DOMContentLoaded", function() {
-//   // Приховуємо індикатор завантаження при завантаженні сторінки
-//   hideLoader();
-// });
+document.addEventListener("DOMContentLoaded", function() {
+  // Приховуємо індикатор завантаження при завантаженні сторінки
+  hideLoader();
+});
 
 function onFormSubmit(event) {
   event.preventDefault();
@@ -80,8 +80,6 @@ function hideLoader() {
   loader.style.display = "none";
 };
 
-
-// Після виклику функції renderImages(images) та додавання зображень до галереї
 const lightbox = new SimpleLightbox(".gallery a", {
   captionsData: "alt",
 });
