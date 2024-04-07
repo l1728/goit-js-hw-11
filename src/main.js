@@ -5,87 +5,85 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 import { fetchImages } from "./js/pixabay-api";
-import { clearGallery, renderImages } from "./js/render-functions"
+import { renderImages } from "./js/render-functions"
+
+   // Підключаємо бібліотеку і вказуємо затримку підпису зображення з атрибуту alt
+    const lightbox = new SimpleLightbox('.gallery a', { captionDelay: 250,
+    captionsData: 'alt', 
+   });
+
+   // Отримуємо посилання на форму за ідентифікатором
+   const searchForm = document.getElementById("search-form");
+   // Отримуємо посилання на індикатор
+   const loader = document.querySelector(".loader"); 
+
+   // Додаємо обробник події "submit" до форми
+   searchForm.addEventListener("submit", onFormSubmit);
 
 
-
-// Отримуємо посилання на форму та список галереї за їх ідентифікаторами
-const searchForm = document.getElementById("search-form");
-// Додаємо обробник події "submit" до форми
-searchForm.addEventListener("submit", onFormSubmit);
-
-document.addEventListener("DOMContentLoaded", function() {
-  // Приховуємо індикатор завантаження при завантаженні сторінки
-  hideLoader();
-});
 
 function onFormSubmit(event) {
-  event.preventDefault();
-  // Отримуємо значення текстового поля пошуку
-  const searchInput = document.getElementById("search-input");
-  // Видаляємо зайві пробіли з початку та кінця рядка
-  const query = searchInput.value.trim();
-  // Перевіряємо, чи не є поле пошуку порожнім
-   
-  if (query !== "") {
-    // Показуємо індикатор завантаження
-      showLoader();
-    // Виконуємо HTTP-запит за допомогою функції fetchImages
-    fetchImages(query)
-      .then(images => {
-        //Очищуємо галерею
-        clearGallery();
-        //Очищуємо поле інпуту
-        searchInput.value = "";
-        
-        if (images.length === 0) {
-          // Виводимо повідомлення про відсутність зображень
-          iziToast.info({
-            title: "Information",
-            message: "Sorry, there are no images matching your search query. Please try again!",
-            position: "topRight",
-            backgroundColor: "red",
-            maxWidth: "500px"
+       event.preventDefault();
+       // Показуємо індикатор завантаження
+       showLoader();
+       //Очищуємо галерею
+       clearGallery();
+       // Отримуємо значення текстового поля пошуку
+       const searchInput = document.getElementById("search-input");
+       // Видаляємо зайві пробіли з початку та кінця рядка
+       const query = searchInput.value.trim();
+       // Перевіряємо, чи не є поле пошуку порожнім
+       if (query !== "") {
+       // Виконуємо HTTP-запит за допомогою функції fetchImages
+       fetchImages(query)
+         .then(images => {
+           //Очищуємо поле інпуту
+           searchInput.value = "";
+           if (images.length === 0) {
+             // Виводимо повідомлення про відсутність зображень
+             iziToast.info({
+               title: "Information",
+               message: "Sorry, there are no images matching your search query. Please try again!",
+               position: "topRight",
+               backgroundColor: "red",
+               maxWidth: "500px"
+             });
+           } else {
+             renderImages(images);
+             // Оновлюємо галерею після додавання нових елементів
+             lightbox.refresh();
+           }         
+          })
+         .catch(error => {
+           console.error("Error fetching images:", error);
+          })
+         .finally(() => {
+           // Приховуємо індикатор завантаження
+           hideLoader();
           });
-        } else {
-         
-          renderImages(images);
-        };
-      })
-      .catch(error => {
-        console.error("Error fetching images:", error);
-        // Приховуємо індикатор завантаження в разі помилки
-        hideLoader();
-        // Очищаємо значення пошукового поля
-        searchInput.value = "";
-      })
-      .finally(() => {
-        // Очищаємо значення пошукового поля незалежно від результату
-        searchInput.value = "";
-        // Приховуємо індикатор завантаження
-        hideLoader();
-      });
   }
 };
 
+
 function showLoader() {
-  // Додати код для показу індикатора завантаження
-  const loader = document.querySelector(".loader");
+   // Показуємо індикатор
   loader.style.display = "block";
 };
 
 function hideLoader() {
-  // Додати код для приховування індикатора завантаження
- const loader = document.querySelector(".loader");
+  // Приховуємо індикатор завантаження
   loader.style.display = "none";
 };
 
-const lightbox = new SimpleLightbox(".gallery a", {
-  captionsData: "alt",
-});
+ function clearGallery() {
+    const gallery = document.querySelector(".gallery");
+    gallery.innerHTML = "";
+};
 
 
 
 
 
 
+
+  
